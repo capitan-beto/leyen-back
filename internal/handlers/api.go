@@ -7,4 +7,8 @@ import (
 
 func Handler(r *chi.Mux) {
 	r.Use(chimiddle.StripSlashes)
+
+	r.Route("/", func(router chi.Router) {
+		router.Get("/", Health)
+	})
 }
