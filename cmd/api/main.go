@@ -5,7 +5,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/go-chi/chi"
+	"cmd/api/main.go/internal/handlers"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/joho/godotenv"
 	log "github.com/sirupsen/logrus"
@@ -18,7 +19,7 @@ func main() {
 	}
 
 	PORT, exists := os.LookupEnv("PORT")
-	if exists == false {
+	if !exists {
 		os.Setenv("PORT", "8080")
 	}
 
