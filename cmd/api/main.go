@@ -21,6 +21,7 @@ func main() {
 	PORT, exists := os.LookupEnv("PORT")
 	if !exists {
 		os.Setenv("PORT", "8080")
+		PORT = "8080"
 	}
 
 	log.SetReportCaller(true)
@@ -30,11 +31,11 @@ func main() {
 	fmt.Println("Starting GO API service...")
 
 	fmt.Println(`
-	______     ______        ______     ______   __    
-   /\  ___\   /\  __ \      /\  __ \   /\  == \ /\ \   
-   \ \ \__ \  \ \ \/\ \     \ \  __ \  \ \  _-/ \ \ \  
-	\ \_____\  \ \_____\     \ \_\ \_\  \ \_\    \ \_\ 
-	 \/_____/   \/_____/      \/_/\/_/   \/_/     \/_/ `)
+ ______     ______        ______     ______   __    
+/\  ___\   /\  __ \      /\  __ \   /\  == \ /\ \   
+\ \ \__ \  \ \ \/\ \     \ \  __ \  \ \  _-/ \ \ \  
+ \ \_____\  \ \_____\     \ \_\ \_\  \ \_\    \ \_\ 
+  \/_____/   \/_____/      \/_/\/_/   \/_/     \/_/ `)
 
 	fmt.Println(("Running on " + PORT + "!"))
 	log.Fatal(http.ListenAndServe(":"+PORT, r))
