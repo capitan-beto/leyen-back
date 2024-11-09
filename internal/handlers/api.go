@@ -10,5 +10,7 @@ func Handler(r *chi.Mux) {
 
 	r.Route("/", func(router chi.Router) {
 		router.Get("/", Health)
+
+		router.Get("/users", GetAllUsers)
 	})
 }
