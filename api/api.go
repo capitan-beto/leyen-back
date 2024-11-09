@@ -1,14 +1,10 @@
 package api
 
 import (
+	"cmd/api/main.go/models"
 	"encoding/json"
 	"net/http"
 )
-
-type HealthResponse struct {
-	Code    int
-	Message string
-}
 
 //error handling
 
@@ -44,3 +40,15 @@ var (
 		writeError(w, err.Error(), http.StatusNotFound)
 	}
 )
+
+// handlers responses
+
+type HealthResponse struct {
+	Code    int
+	Message string
+}
+
+type GetAllUsersResponse struct {
+	Code  int
+	Users []*models.User
+}
