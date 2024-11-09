@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 
+	"cmd/api/main.go/models"
+
 	"github.com/go-sql-driver/mysql"
 )
 
@@ -31,4 +33,33 @@ func CreateConnection() (*sql.DB, error) {
 	db.SetMaxOpenConns(5)
 	fmt.Println("Connected!")
 	return db, nil
+}
+
+//users queries
+
+func GetUsers(db *sql.DB) ([]*models.User, error) {
+	var users []*models.User
+
+	rows, err := db.Query("SELECT * FROM users")
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var u models.User
+		if err := rows.Scan(&u.Dni, &u.Email, &u.FullName, &u.Points, &u.RegisterDate); err != nil {
+			return nil, err
+		}
+		users = append(users, &u)
+
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	db.Close()
+	return users, nil
 }
