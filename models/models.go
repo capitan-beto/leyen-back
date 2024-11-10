@@ -2,6 +2,8 @@ package models
 
 type User struct {
 	Dni          int    `json:"dni"`
+	Pass         string `json:"password"`
+	Role         string `json:"role"`
 	Email        string `json:"email"`
 	FullName     string `json:"fullName"`
 	Points       int    `json:"points"`

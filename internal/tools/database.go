@@ -49,7 +49,7 @@ func GetUsers(db *sql.DB) ([]*models.User, error) {
 
 	for rows.Next() {
 		var u models.User
-		if err := rows.Scan(&u.Dni, &u.Email, &u.FullName, &u.Points, &u.RegisterDate); err != nil {
+		if err := rows.Scan(&u.Dni, &u.Pass, &u.Role, &u.Email, &u.FullName, &u.Points, &u.RegisterDate); err != nil {
 			return nil, err
 		}
 		users = append(users, &u)
