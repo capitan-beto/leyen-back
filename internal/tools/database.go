@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"cmd/api/main.go/models"
+	"cmd/api/main.go/utils"
 
 	"github.com/go-sql-driver/mysql"
 )
@@ -62,4 +63,20 @@ func GetUsers(db *sql.DB) ([]*models.User, error) {
 
 	db.Close()
 	return users, nil
+}
+
+func AddUser(nu *models.User, db *sql.DB) error {
+	pass, err := utils.HashPassword(nu.Pass)
+	if err != nil {
+		return err
+	}
+
+	var query string = "INSERT INTO users (dni, pword, email, role, full_name, points, register_date) VALUES (?, ?, ?, ?, ?, ?, ?)"
+	_, err = db.Exec(query, &nu.Dni, &pass, &nu.Email, &nu.Role, &nu.FullName, &nu.Points, &nu.RegisterDate)
+	if err != nil {
+		return err
+	}
+
+	db.Close()
+	return nil
 }
