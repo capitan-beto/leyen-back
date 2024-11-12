@@ -12,5 +12,7 @@ func Handler(r *chi.Mux) {
 		router.Get("/", Health)
 
 		router.Get("/users", GetAllUsers)
+
+		router.Post("/users", PostSignUp)
 	})
 }
