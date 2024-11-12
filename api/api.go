@@ -52,3 +52,8 @@ type GetAllUsersResponse struct {
 	Code  int
 	Users []*models.User
 }
+
+type PostSignUpResponse struct {
+	Code    int
+	Message string
+}
