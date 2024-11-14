@@ -53,7 +53,7 @@ type GetAllUsersResponse struct {
 	Users []*models.User
 }
 
-type PostSignUpResponse struct {
+type PostHandlerResponse struct {
 	Code    int
 	Message string
 }
