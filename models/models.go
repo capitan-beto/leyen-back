@@ -9,3 +9,9 @@ type User struct {
 	Points       int    `json:"points"`
 	RegisterDate string `json:"register_date"`
 }
+
+type EmailReqBody struct {
+	ToAddr string `json:"to_addr"`
+	Subj   string `json:"subject"`
+	Body   string `json:"body"`
+}
