@@ -32,7 +32,7 @@ func PostSignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var res = api.PostSignUpResponse{
+	var res = api.PostHandlerResponse{
 		Code:    http.StatusOK,
 		Message: fmt.Sprintf("welcome, %v", newUser.FullName),
 	}
