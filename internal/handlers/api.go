@@ -14,5 +14,7 @@ func Handler(r *chi.Mux) {
 		router.Get("/users", GetAllUsers)
 
 		router.Post("/users", PostSignUp)
+
+		router.Post("/email", PostSendEmail)
 	})
 }
