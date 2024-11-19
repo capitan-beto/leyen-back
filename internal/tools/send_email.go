@@ -16,7 +16,7 @@ func SendEmail(to []string, subj, body string) error {
 	msg := "Subject: " + subj + "\n" + body
 
 	return smtp.SendMail(
-		os.Getenv("STMP_ADDR"),
+		os.Getenv("SMTP_ADDR"),
 		auth,
 		os.Getenv("FROM_EMAIL"),
 		to,
