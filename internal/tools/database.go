@@ -65,6 +65,8 @@ func GetUsers(db *sql.DB) ([]*models.User, error) {
 	return users, nil
 }
 
+// REMEMBER TO CHECK DUPLICATES
+
 func AddUser(nu *models.User, db *sql.DB) error {
 	pass, err := utils.HashPassword(nu.Pass)
 	if err != nil {
@@ -79,4 +81,27 @@ func AddUser(nu *models.User, db *sql.DB) error {
 
 	db.Close()
 	return nil
+}
+
+func AuthenticateUser(email, pword string, db *sql.DB) (*string, error) {
+	userCreds := struct {
+		pword string
+		role  string
+	}{}
+
+	row := db.QueryRow("SELECT pword, role FROM users WHERE email = ?", email)
+	err := row.Scan(&userCreds.pword, &userCreds.role)
+	if err != nil {
+		if err != sql.ErrNoRows {
+			return nil, err
+		}
+		return nil, err
+	}
+
+	if err := utils.CheckPassword(userCreds.pword, pword); err != nil {
+		return nil, err
+	}
+
+	db.Close()
+	return &userCreds.role, err
 }
