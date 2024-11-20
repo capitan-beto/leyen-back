@@ -4,6 +4,7 @@ import (
 	"cmd/api/main.go/api"
 	"cmd/api/main.go/internal/tools"
 	"cmd/api/main.go/models"
+	"cmd/api/main.go/utils"
 	"database/sql"
 	"encoding/json"
 	"errors"
@@ -27,21 +28,21 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if role, ok := tools.CheckUserData(user.Email, user.Pass, database); ok {
-		tokenString, err := utils.GenerateToken(user.Email, *&role)
-		if err != nil {
-			log.Error(err)
-			api.RequestErrorHandler(w, err)
-		}
-
-		w.WriteHeader(http.StatusOK)
-		if err = json.NewEncoder(w).Encode(tokenString); err != nil {
-			log.Error(err)
-			api.InternalErrorHandler(w)
-		}
-		return
-	} else {
+	role, err := tools.AuthenticateUser(user.Email, user.Pass, database)
+	if err != nil {
+		log.Error(err)
 		api.UnauthorizedHandler(w, errors.New("invalid credentials"))
-		return
+	}
+
+	tokenString, err := utils.GenerateToken(user.Email, *role)
+	if err != nil {
+		log.Error(err)
+		api.InternalErrorHandler(w)
+	}
+
+	w.WriteHeader(http.StatusOK)
+	if err = json.NewEncoder(w).Encode(tokenString); err != nil {
+		log.Error(err)
+		api.InternalErrorHandler(w)
 	}
 }
