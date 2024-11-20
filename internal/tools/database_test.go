@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"cmd/api/main.go/models"
+	"cmd/api/main.go/utils"
 
 	"github.com/DATA-DOG/go-sqlmock"
 )
@@ -79,5 +80,84 @@ func TestAddUserOk(t *testing.T) {
 
 	if err := AddUser(&testdata, db); err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestAuthenticateUserOk(t *testing.T) {
+	hashedPwd, err := utils.HashPassword("supersecret1234")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	defer db.Close()
+
+	rows := sqlmock.NewRows([]string{"pword", "role"}).
+		AddRow(hashedPwd, "admin")
+	mock.ExpectQuery("SELECT(.*)").WillReturnRows(rows)
+
+	role, err := AuthenticateUser("email@gmail.com", "supersecret1234", db)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	expected := "admin"
+	if got := role; string(*got) != expected {
+		t.Fatalf("error: expected %v, got %v", expected, string(*got))
+	}
+}
+
+func TestAuthenticateUserAuthError(t *testing.T) {
+	hashedPwd, err := utils.HashPassword("supersecret1234")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	defer db.Close()
+
+	rows := sqlmock.NewRows([]string{"pword", "role"}).
+		AddRow(hashedPwd, "admin")
+	mock.ExpectQuery("SELECT(.*)").WillReturnRows(rows)
+
+	_, err = AuthenticateUser("email@gmail.com", "falsesupersecret1234", db)
+	if err == nil {
+		t.Fatal(err)
+	}
+}
+
+func TestAuthenticateUserRoleError(t *testing.T) {
+	hashedPwd, err := utils.HashPassword("supersecret1234")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	defer db.Close()
+
+	rows := sqlmock.NewRows([]string{"pword", "role"}).
+		AddRow(hashedPwd, "user")
+	mock.ExpectQuery("SELECT(.*)").WillReturnRows(rows)
+
+	role, err := AuthenticateUser("email@gmail.com", "supersecret1234", db)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	expected := "admin"
+	if got := role; string(*got) == expected {
+		t.Fatalf("error: expected %v, got %v", expected, string(*got))
 	}
 }
