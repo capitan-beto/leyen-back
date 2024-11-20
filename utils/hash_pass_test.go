@@ -10,7 +10,7 @@ func TestHashPasswordOK(t *testing.T) {
 		t.Error(err)
 	}
 
-	if pwdMatch := CheckPassword(hashedPwd, pass); !pwdMatch {
+	if err := CheckPassword(hashedPwd, pass); err != nil {
 		t.Error(err)
 	}
 }
@@ -21,7 +21,7 @@ func TestCheckPasswordFalse(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if pwdMatch := CheckPassword(hashedPwd, "thisshouldmatch"); pwdMatch {
-		t.Fatalf("error: expected false, got %t", pwdMatch)
+	if err := CheckPassword(hashedPwd, "thisshouldmatch"); err == nil {
+		t.Fatalf("error: expected false, got %t", err)
 	}
 }
