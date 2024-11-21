@@ -11,7 +11,7 @@ import (
 
 var secret = []byte(os.Getenv("JWT_SECRET"))
 
-func GenerateToken(email, role string) (*string, error) {
+func GenerateToken(email, role string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"email": email,
 		"role":  role,
@@ -20,10 +20,10 @@ func GenerateToken(email, role string) (*string, error) {
 
 	tokenString, err := token.SignedString(secret)
 	if err != nil {
-		return nil, nil
+		return "", nil
 	}
 
-	return &tokenString, nil
+	return tokenString, nil
 }
 
 func VerifyToken(tokenString, role string) error {
