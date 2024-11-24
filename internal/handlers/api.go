@@ -15,6 +15,6 @@ func Handler(r *chi.Mux) {
 
 		router.Post("/users", PostSignUp)
 
-		router.Post("/email", PostSendEmail)
+		router.Post("/account-recovery", PostAccountRecovery)
 	})
 }
