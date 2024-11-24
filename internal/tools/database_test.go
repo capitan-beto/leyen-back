@@ -12,7 +12,7 @@ import (
 )
 
 var testdata = models.User{
-	Dni:          40616528,
+	Id:           1,
 	Pass:         "carlosnana1",
 	Role:         "admin",
 	FullName:     "Carlos Nana",
@@ -38,7 +38,7 @@ func TestGetUsers(t *testing.T) {
 	}
 
 	got := models.User{
-		Dni:          res[0].Dni,
+		Id:           res[0].Id,
 		Pass:         res[0].Pass,
 		Role:         res[0].Role,
 		FullName:     res[0].FullName,
