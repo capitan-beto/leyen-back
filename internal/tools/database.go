@@ -50,7 +50,7 @@ func GetUsers(db *sql.DB) ([]*models.User, error) {
 
 	for rows.Next() {
 		var u models.User
-		if err := rows.Scan(&u.Dni, &u.Pass, &u.Role, &u.Email, &u.FullName, &u.Points, &u.RegisterDate); err != nil {
+		if err := rows.Scan(&u.Id, &u.Pass, &u.Role, &u.Email, &u.FullName, &u.Points, &u.RegisterDate); err != nil {
 			return nil, err
 		}
 		users = append(users, &u)
@@ -74,7 +74,7 @@ func AddUser(nu *models.User, db *sql.DB) error {
 	}
 
 	var query string = "INSERT INTO users (dni, pword, email, role, full_name, points, register_date) VALUES (?, ?, ?, ?, ?, ?, ?)"
-	_, err = db.Exec(query, &nu.Dni, &pass, &nu.Email, &nu.Role, &nu.FullName, &nu.Points, &nu.RegisterDate)
+	_, err = db.Exec(query, &nu.Id, &pass, &nu.Email, &nu.Role, &nu.FullName, &nu.Points, &nu.RegisterDate)
 	if err != nil {
 		return err
 	}
