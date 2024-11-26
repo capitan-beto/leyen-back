@@ -105,3 +105,16 @@ func AuthenticateUser(email, pword string, db *sql.DB) (*string, error) {
 	db.Close()
 	return &userCreds.role, err
 }
+
+func UpdateLastTOTP(email, totp string, db *sql.DB) error {
+	var err error
+
+	query := "UPDATE users SET last_totp = ? WHERE email = ?"
+	_, err = db.Exec(query, totp, email)
+	if err != nil {
+		return err
+	}
+
+	db.Close()
+	return err
+}
