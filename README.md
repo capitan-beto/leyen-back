@@ -27,3 +27,7 @@ Estuctura del proyecto
 |
 |-- cmd -- api --> main.go: modulo de inicializacion de
 |                           del proyecto
+
+
+
+TODO: limit pass length to 72
