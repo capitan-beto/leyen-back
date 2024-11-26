@@ -1,7 +1,7 @@
 package models
 
 type User struct {
-	Dni          int    `json:"dni"`
+	Id           int    `json:"id"`
 	Pass         string `json:"password"`
 	Role         string `json:"role"`
 	Email        string `json:"email"`
@@ -10,8 +10,6 @@ type User struct {
 	RegisterDate string `json:"register_date"`
 }
 
-type EmailReqBody struct {
-	ToAddr string `json:"to_addr"`
-	Subj   string `json:"subject"`
-	Body   string `json:"body"`
+type OTTPRequest struct {
+	ToAddr string `json:"user_email"`
 }
