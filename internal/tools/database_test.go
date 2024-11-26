@@ -161,3 +161,18 @@ func TestAuthenticateUserRoleError(t *testing.T) {
 		t.Fatalf("error: expected %v, got %v", expected, string(*got))
 	}
 }
+
+func TestUpdateLastOTP(t *testing.T) {
+	const mockQuery = "UPDATE users SET last_totp = ? WHERE email = ?"
+
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("Failed to create sqlmock: %v", err)
+	}
+
+	mock.ExpectExec(regexp.QuoteMeta(mockQuery)).WillReturnResult(sqlmock.NewResult(1, 1))
+
+	if err := UpdateLastTOTP("test@gmail.com", "123456", db); err != nil {
+		t.Fatal(err)
+	}
+}
