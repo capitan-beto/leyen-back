@@ -30,4 +30,6 @@ Estuctura del proyecto
 
 
 
-TODO: limit pass length to 72
+TODO: limit pass length to 
+- TEST ALL TOTP OPS
+- ADD CONCURRENCY TO TOTP
