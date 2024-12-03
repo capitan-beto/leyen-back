@@ -9,6 +9,7 @@ import (
 	"cmd/api/main.go/utils"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/xlzd/gotp"
 )
 
 var testdata = models.User{
@@ -162,8 +163,8 @@ func TestAuthenticateUserRoleError(t *testing.T) {
 	}
 }
 
-func TestUpdateLastOTP(t *testing.T) {
-	const mockQuery = "UPDATE users SET last_totp = ? WHERE email = ?"
+func TestUpdateLastTOTP(t *testing.T) {
+	const mockQuery = "UPDATE users SET secret_totp = ? WHERE email = ?"
 
 	db, mock, err := sqlmock.New()
 	if err != nil {
@@ -172,7 +173,28 @@ func TestUpdateLastOTP(t *testing.T) {
 
 	mock.ExpectExec(regexp.QuoteMeta(mockQuery)).WillReturnResult(sqlmock.NewResult(1, 1))
 
-	if err := UpdateLastTOTP("test@gmail.com", "123456", db); err != nil {
+	if err := UpdateLastTOTP("test@gmail.com", "123456", "123456abc", db); err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestVerifyTOTP(t *testing.T) {
+	secret := gotp.RandomSecret(16)
+	token := gotp.NewDefaultTOTP(secret).Now()
+
+	const mockQuery = "SELECT secret_totp FROM users WHERE email = ?"
+
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("failet to create sqlmock: %v", err)
+	}
+
+	rows := sqlmock.NewRows([]string{"secret_totp"}).
+		AddRow(secret)
+	mock.ExpectQuery(regexp.QuoteMeta(mockQuery)).WillReturnRows(rows)
+
+	err = VerifyTOTP("test@ŋmail.com", token, db)
+	if err != nil {
+		t.Fatalf("error veryfing TOTP. %v", err)
 	}
 }
