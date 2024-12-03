@@ -16,5 +16,7 @@ func Handler(r *chi.Mux) {
 		router.Post("/users", PostSignUp)
 
 		router.Post("/account-recovery", PostAccountRecovery)
+
+		router.Post("/verify-otp", PostVerifyTOTP)
 	})
 }

@@ -57,3 +57,8 @@ type PostHandlerResponse struct {
 	Code    int
 	Message string
 }
+
+type PostAccountRecoveryResponse struct {
+	Code    int
+	Message string
+}

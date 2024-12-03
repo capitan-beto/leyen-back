@@ -27,7 +27,15 @@ func PostAccountRecovery(w http.ResponseWriter, r *http.Request) {
 
 	defer r.Body.Close()
 
-	totp := gotp.NewDefaultTOTP(gotp.RandomSecret(16))
+	secret := gotp.RandomSecret(16)
+	if secret == "" {
+		log.Error(fmt.Errorf("error, couldn't generate totp secret"))
+		api.RequestErrorHandler(w, err)
+		return
+	}
+
+	totp := gotp.NewDefaultTOTP(secret)
+	token := totp.Now()
 
 	var database *sql.DB
 	database, err = tools.CreateConnection()
@@ -36,7 +44,7 @@ func PostAccountRecovery(w http.ResponseWriter, r *http.Request) {
 		api.InternalErrorHandler(w)
 	}
 
-	err = tools.UpdateLastTOTP(reqBody.ToAddr, totp.Now(), database)
+	err = tools.UpdateLastTOTP(reqBody.ToAddr, token, secret, database)
 	if err != nil {
 		log.Error(err)
 		api.InternalErrorHandler(w)
@@ -44,7 +52,7 @@ func PostAccountRecovery(w http.ResponseWriter, r *http.Request) {
 
 	to := strings.Split(reqBody.ToAddr, ",")
 
-	err = tools.SendEmail(to, "Login con código único", fmt.Sprintf("<a>%s</a>", totp.Now()))
+	err = tools.SendEmail(to, "Login con código único", fmt.Sprintf("<a>%s</a>", token))
 	if err != nil {
 		log.Error(err)
 		api.InternalErrorHandler(w)
@@ -53,7 +61,7 @@ func PostAccountRecovery(w http.ResponseWriter, r *http.Request) {
 
 	var res = api.PostHandlerResponse{
 		Code:    http.StatusOK,
-		Message: fmt.Sprintf("one tiime code sent to %s", to),
+		Message: fmt.Sprintf("one time code sent to %s", to),
 	}
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
