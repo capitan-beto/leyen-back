@@ -33,3 +33,8 @@ Estuctura del proyecto
 TODO: limit pass length to 
 - TEST ALL TOTP OPS
 - ADD CONCURRENCY TO TOTP
+
+UPDATE: 
+
+Given the potentiability of reuse of this code for the basics operations of REST architecture this gonna works as a starter for future projects.
+In its honor, it'll be keeping the name of the Leyen Cafe.
